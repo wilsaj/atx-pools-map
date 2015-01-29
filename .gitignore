@@ -1,2 +1,10 @@
-*.zip
+*.csv
+*.cpg
+*.dbf
+*.prj
+*.sbn
+*.sbx
 *.shp
+*.shx
+*.xml
+*.zip
