@@ -4,8 +4,8 @@ var gulp = require('gulp');
 var webserver = require('gulp-webserver');
 
 
-var appDir = './app';
- 
+var appDir = './';
+
 gulp.task('default', ['webserver']);
 
 gulp.task('webserver', function() {
@@ -15,3 +15,9 @@ gulp.task('webserver', function() {
       open: true
     }));
 });
+
+
+gulp.task('watch', function() {
+  gulp.watch(['index.html', 'map.css', 'map.js'], 'webserver');
+});
+
