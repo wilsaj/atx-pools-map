@@ -4,9 +4,9 @@ data: census decks pools
 
 census: data/census/pop_total.geojson
 
-decks: data/coa/decks_2013.shp
+decks: data/coa/decks_2013.geojson
 
-pools: data/coa/pools_2013.shp
+pools: data/coa/pools_2013.geojson
 
 
 # Census data
@@ -36,6 +36,8 @@ data/coa/%_2013.shp:
 	rmdir $(basename $@)
 	touch $@
 
+data/coa/%.geojson:
+	ogr2ogr -f GeoJSON -t_srs crs:84 $@ $<
 
 # City of Austin data
 data/coa/%.zip:
@@ -45,3 +47,6 @@ data/coa/%.zip:
 
 data/coa/decks_2013.shp: data/coa/decks_2013.zip
 data/coa/pools_2013.shp: data/coa/pools_2013.zip
+
+data/coa/pools_2013.geojson: data/coa/pools_2013.shp
+data/coa/decks_2013.geojson: data/coa/decks_2013.shp
