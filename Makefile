@@ -10,13 +10,13 @@ pools: data/coa/pools_2013.geojson
 
 
 # Census data
-data/census/reporter/acs2013_5yr_B01003_15000US484530015043.zip:
+data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.zip:
 	mkdir -p $(dir $@)
 	curl 'http://api.censusreporter.org/1.0/data/download/latest?table_ids=B01003&geo_ids=05000US48453,04000US48,01000US,150|05000US48453&format=geojson' -o $@.download
 	mv $@.download $@
 
 
-data/census/reporter/%.geojson:
+data/census/reporter/extract/%.geojson:
 	cd $(dir $@) && unzip $(notdir $<)
 	mv $(dir $@)$(notdir $(basename $@))/$(notdir $@) $@
 	rm -rf $(dir $@)/$(notdir $(basename $@))
@@ -24,9 +24,12 @@ data/census/reporter/%.geojson:
 data/census/%.geojson:
 	cp $< $@
 
-data/census/reporter/acs2013_5yr_B01003_15000US484530015043.geojson: data/census/reporter/acs2013_5yr_B01003_15000US484530015043.zip
+data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.geojson: data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.zip
 
-data/census/pop_total.geojson: data/census/reporter/acs2013_5yr_B01003_15000US484530015043.geojson
+data/census/pop_total.geojson: data/census/reporter/acs2013_5yr_B01003_15000US484530015043-only-blocks.geojson
+
+data/census/reporter/%-only-blocks.geojson: data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.geojson
+	cat $<  | egrep -v '(United States|Travis County|Texas)' > $@
 
 data/coa/%_2013.shp:
 	rm -rf $(basename $@)
