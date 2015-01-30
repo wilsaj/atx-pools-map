@@ -15,22 +15,18 @@ data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.zip:
 	curl 'http://api.censusreporter.org/1.0/data/download/latest?table_ids=B01003&geo_ids=05000US48453,04000US48,01000US,150|05000US48453&format=geojson' -o $@.download
 	mv $@.download $@
 
-
 data/census/reporter/extract/%.geojson:
 	cd $(dir $@) && unzip $(notdir $<)
 	mv $(dir $@)$(notdir $(basename $@))/$(notdir $@) $@
 	rm -rf $(dir $@)/$(notdir $(basename $@))
 
-data/census/%.geojson:
-	cp $< $@
-
 data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.geojson: data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.zip
 
-data/census/pop_total.geojson: data/census/reporter/acs2013_5yr_B01003_15000US484530015043-only-blocks.geojson
-
-data/census/reporter/%-only-blocks.geojson: data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.geojson
+data/census/pop_total.geojson: data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.geojson
 	cat $<  | egrep -v '(United States|Travis County|Texas)' > $@
 
+
+# City of Austin data
 data/coa/%_2013.shp:
 	rm -rf $(basename $@)
 	mkdir -p $(basename $@)
@@ -42,7 +38,6 @@ data/coa/%_2013.shp:
 data/coa/%.geojson:
 	ogr2ogr -f GeoJSON -t_srs crs:84 $@ $<
 
-# City of Austin data
 data/coa/%.zip:
 	mkdir -p $(dir $@)
 	curl 'ftp://ftp.ci.austin.tx.us/GIS-Data/Regional/regional/$(notdir $@)' -o $@.download
