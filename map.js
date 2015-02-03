@@ -1,24 +1,41 @@
 'use strict';
 
 $(function () {
-  var map = L.map('map', {
-      scrollWheelZoom: false,
-      center: [30.33, -97.7],
-      zoom: 10
-  });
+  mapboxgl.accessToken = 'pk.eyJ1Ijoid2lsc2FqIiwiYSI6InNRVHhMcTQifQ.ufmSZHZfDC0qWQQ65hmwLg';
+  mapboxgl.util.getJSON('https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v6.json', function (err, style) {
+    if (err) throw err;
 
-  var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-  });
+    style.layers.push({
+      "id": "censusBlocksFill",
+      "type": "fill",
+      "source": "censusBlocks",
+      "paint": {
+        "fill-opacity": .2,
+        "fill-color": "#888",
+      }
+    });
 
-  map.addLayer(layer);
+    style.layers.push({
+      "id": "censusBlocksLine",
+      "type": "line",
+      "source": "censusBlocks",
+      "paint": {
+        "line-color": "#888",
+        "line-width": 2
+      }
+    });
 
-  $.getJSON('./data/census/pop_total.geojson', function (data, status, xhr) {
-    L.geoJson(data, {
-        style: function (feature) {
-            return {color: '#0000ff'};
-        }
-    }).addTo(map);
+
+    $.getJSON('./data/census/pop_total.geojson', function (data, status, xhr) {
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: style,
+        center: [30.5, -97.70],
+        zoom: 9 
+      });
+      var censusBlocks = new mapboxgl.GeoJSONSource({data: data});
+      map.addSource('censusBlocks', censusBlocks);
+    });
   });
 
 });
