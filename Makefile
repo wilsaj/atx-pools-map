@@ -1,6 +1,6 @@
 all: data
 
-data: census decks pools
+data: pools-per-capita decks-per-capita
 
 census: data/census/pop_total.geojson
 
@@ -8,6 +8,14 @@ decks: data/coa/decks_2013.geojson
 
 pools: data/coa/pools_2013.geojson
 
+pools-per-capita: data/processed/pools-per-capita.geojson
+decks-per-capita: data/processed/decks-per-capita.geojson
+
+%-per-capita: data/processed/%-per-capita.geojson
+
+data/processed/%-per-capita.geojson: data/census/pop_total.geojson data/coa/%_2013.geojson
+	mkdir -p $(dir $@)
+	node perCapitaify.js $^ > $@
 
 # Census data
 data/census/reporter/extract/acs2013_5yr_B01003_15000US484530015043.zip:
