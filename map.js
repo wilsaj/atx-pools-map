@@ -55,15 +55,21 @@ $(function () {
           "type": "line",
           "source": "censusBlocks",
           "filter": ["==", "featureIndex", featureIndex],
+          "transition": {
+            "delay": 0,
+            "duration": 10
+          },
           "paint": {
             "line-color": "#888",
+            "line-opacity": 0.5,
             "line-width": 0.5
           }
         };
         var paintClass = "paint.hilight" + featureIndex;
         hilightStyle[paintClass] = {
           "line-color": "#FFE545",
-          "line-width": 2
+          "line-opacity": 1,
+          "line-width": 4
         };
         style.layers.push(hilightStyle);
       });
