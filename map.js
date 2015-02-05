@@ -6,12 +6,16 @@ $(function () {
     if (err) throw err;
     var key = 'area_per_capita';
     var featureName = 'pools';
+    var populationKey = 'B01003001 - Total';
+    var populationErrorKey = 'B01003001 - Total, Error';
 
     var messagePre= 'This is a map of ' + featureName + ' per capita\n' +
                     'in Travis County, TX.\n\n' +
                     'This data comes from the <a href="ftp://ftp.ci.austin.tx.us/GIS-Data/Regional/coa_gis.html">City of \n' +
                     'Austin</a>. It is derived from LiDar \n' +
-                    'data collected in 2013.\n\n';
+                    'data collected in 2013.\n\n' +
+                    'Population data comes from the US\n' +
+                    'Census ACS 2013.\n\n';
 
     var filename = './data/processed/' + featureName + '-per-capita.geojson';
 
@@ -75,8 +79,11 @@ $(function () {
 
               if (features.length > 0) {
                 var feature = features[0];
+                debugger;
                 var str = "Number of " + featureName + " per capita:  " + round(feature.properties.features_per_capita, 2) + '\n' +
-                          "Total sq ft per capita:     " + round(feature.properties.area_per_capita * 10.7639, 2) + '\n';
+                          "Total sq ft per capita:      " + round(feature.properties.area_per_capita * 10.7639, 2) + '\n' +
+                          "Population:                  " + feature.properties[populationKey] + '\n' +
+                          "Pop. error:                  " + feature.properties[populationErrorKey] + '\n';
                 document.getElementById('features').innerHTML = messagePre + str;
                 map.style.setClassList(['hilight' + feature.properties.featureIndex]);
               }
