@@ -79,9 +79,8 @@ $(function () {
 
               if (features.length > 0) {
                 var feature = features[0];
-                debugger;
-                var str = "Number of " + featureName + " per capita:  " + round(feature.properties.features_per_capita, 2) + '\n' +
-                          "Total sq ft per capita:      " + round(feature.properties.area_per_capita * 10.7639, 2) + '\n' +
+                var str = "Total sq ft per capita:      " + round(feature.properties.area_per_capita * 10.7639, 2) + '\n' +
+                          "Number of " + featureName + " per capita:  " + round(feature.properties.features_per_capita, 2) + '\n' +
                           "Population:                  " + feature.properties[populationKey] + '\n' +
                           "Pop. error:                  " + feature.properties[populationErrorKey] + '\n';
                 document.getElementById('features').innerHTML = messagePre + str;
